@@ -14,7 +14,7 @@ export function CompetitionSearch(props: {
 }) {
 	const [fromDate, setFromDate] = useState<string>(() => {
 		const d = new Date();
-		d.setDate(d.getDate() - 60);
+		d.setDate(d.getDate() - 5);
 		return d.toISOString().slice(0, 10);
 	});
 	const [search, setSearch] = useState('');
