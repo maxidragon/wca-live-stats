@@ -17,9 +17,13 @@ type View =
 	  };
 
 export default function App() {
+	const base = (import.meta as any).env?.BASE_URL ?? '/';
 	const initialView = useMemo<View>(() => {
-		const pathname = window.location.pathname.replace(/\/+$/, '');
-		const slug = pathname.startsWith('/') ? pathname.slice(1) : pathname;
+		let pathname = window.location.pathname;
+		if (base !== '/' && pathname.startsWith(base)) {
+			pathname = pathname.slice(base.length);
+		}
+		const slug = pathname.replace(/\/+$/, '');
 		if (slug) {
 			const compId = decodeURIComponent(slug);
 			const storedName = getStoredCompetitionName(compId) ?? '';
@@ -32,12 +36,12 @@ export default function App() {
 
 	function goToSearch() {
 		setView({ name: 'search' });
-		history.pushState({}, '', '/');
+		history.pushState({}, '', base);
 	}
 
 	function goToCompetition(competitionId: string, competitionName: string) {
 		setView({ name: 'competition', competitionId, competitionName });
-		const path = `/${encodeURIComponent(competitionId)}`;
+		const path = `${base}${encodeURIComponent(competitionId)}`;
 		history.pushState({}, '', path);
 	}
 
